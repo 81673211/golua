@@ -38,12 +38,12 @@ func GetReadClient(dbName string) *db_client {
 	if len(dbName) == 0 {
 		logger.ERR.Fatalln("dbName is empty")
 	}
-	dbClient, ok := dbPool[dbName]
+	dbClient, ok := dbPoolR[dbName]
 	if ok {
 		return &dbClient
 	}
-	newDbClient := createClient(dbName)
-	dbPool[dbName] = newDbClient
+	newDbClient := createClient(dbName, false)
+	dbPoolR[dbName] = newDbClient
 	return newDbClient
 }
 
