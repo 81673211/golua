@@ -1,12 +1,11 @@
 package conf
 
 import (
-	"encoding/json"
 	"golua/logger"
-	"os"
+	"golua/util"
 )
 
-const glua_conf_name = "conf/glua.json"
+const glua_conf_name = "etc/json/glua.json"
 
 type http_server struct {
 	Port    int
@@ -21,13 +20,9 @@ type glua_conf struct {
 var GluaConf = glua_conf{}
 
 func init() {
-	file, err := os.Open(glua_conf_name)
+	decoder := util.ReadJson(glua_conf_name)
+	err := decoder.Decode(&GluaConf)
 	if err != nil {
-		logger.ERR.Fatalln("open glua.json error", err)
-	}
-	decoder := json.NewDecoder(file)
-	decodeErr := decoder.Decode(&GluaConf)
-	if decodeErr != nil {
-		logger.ERR.Fatalln("decode glua.json error", decodeErr)
+		logger.ERR.Fatalf("decode %s error, err = %s\n", glua_conf_name, err.Error())
 	}
 }
