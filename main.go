@@ -1,9 +1,16 @@
 package main
 
 import (
+	"fmt"
 	_ "golua/conf"
 )
 
-func main() {
+var vmap = make(map[string]int)
 
+func main() {
+	vmap["a"] = 1
+	v, ok := vmap["a"]
+	if ok {
+		fmt.Println(v)
+	}
 }

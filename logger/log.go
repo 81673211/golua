@@ -15,7 +15,7 @@ var (
 func init() {
 	filename := "all.log"
 
-	logFile, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY|os.O_APPEND, os.ModeAppend)
+	logFile, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModePerm)
 	if err != nil {
 		log.Fatalln("create log file err", err)
 	}

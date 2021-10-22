@@ -27,13 +27,35 @@ type db_conf struct {
 
 var dbConf = db_conf{}
 
-var dbPool = make(map[string]db_client)
+var dbPoolR = make(map[string]db_client)
+
+var dbPoolW = make(map[string]db_client)
 
 /**
 read client has no transaction
 */
-func GetMysqlReadClient() *db_client {
-	sql.Open("mysql", dbConf.Mysql.Dsn)
+func GetReadClient(dbName string) *db_client {
+	if len(dbName) == 0 {
+		logger.ERR.Fatalln("dbName is empty")
+	}
+	dbClient, ok := dbPool[dbName]
+	if ok {
+		return &dbClient
+	}
+	newDbClient := createClient(dbName)
+	dbPool[dbName] = newDbClient
+	return newDbClient
+}
+
+func createClient(dbName string, isTransaction bool) *db_client {
+	switch dbName {
+	case "mysql":
+		sql.Open("mysql", dbConf.Mysql.Dsn)
+	case "oracle":
+		// todo
+	default:
+		logger.ERR.Fatalf("db not support, dbName = %s\n", dbName)
+	}
 	return nil
 }
 
